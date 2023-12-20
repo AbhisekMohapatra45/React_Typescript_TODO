@@ -6,12 +6,14 @@ import { styled } from "@mui/material";
 const RootStyle = styled("div")({
   overflow: "hidden",
   display: "flex",
+  minHeight: "100%",
 });
 
-const OutletStyle = styled("div")(({ theme }) => ({
-  paddingTop: theme.spacing(4),
-  width: "100vw",
-}));
+const OutletStyle = styled("div")({
+  paddingTop: 60,
+  minWidth: "100%",
+  overflow: "auto",
+});
 
 function InitialOutlet(): React.JSX.Element {
   return (

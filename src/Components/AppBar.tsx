@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   AppBar,
   Box,
@@ -14,13 +14,50 @@ import {
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import TodoDialog from "../Shared/TodoDialog";
 
-const navItems = ["Create Task"];
+const navItems = [
+  {
+    label: "Create Task",
+    whatToDo: (arg: () => void): void => {
+      arg();
+    },
+  },
+];
 
 function TopBar(): React.JSX.Element {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  interface DialogHandlerState {
+    isOpen: boolean;
+    openDialog: () => void;
+    closeDialog: () => void;
+    taskName: string;
+  }
 
-  const handleDrawerToggle = () => {
+  const [mobileOpen, setMobileOpen] = React.useState<boolean>(false);
+  const [dialogHandlerState, setDialogHandleState] =
+    useState<DialogHandlerState>({
+      isOpen: false,
+      openDialog: (): void => {
+        setDialogHandleState((prev) => ({ ...prev, isOpen: true }));
+      },
+      closeDialog: (): void => {
+        setDialogHandleState((prev) => ({ ...prev, isOpen: false }));
+      },
+      taskName: "",
+    });
+
+  const handleForm = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
+    let {
+      target: { value },
+    } = event;
+    setDialogHandleState((prev) => ({ ...prev, taskName: value }));
+  };
+
+  const store = (): void => {};
+
+  const handleDrawerToggle = (): void => {
     setMobileOpen(!mobileOpen);
   };
 
@@ -32,9 +69,14 @@ function TopBar(): React.JSX.Element {
       <Divider />
       <List>
         {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: "center" }}>
-              <ListItemText primary={item} />
+          <ListItem key={item.label} disablePadding>
+            <ListItemButton
+              sx={{ textAlign: "center" }}
+              onClick={(): void => {
+                item.whatToDo(dialogHandlerState.openDialog);
+              }}
+            >
+              <ListItemText primary={item.label} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -44,8 +86,14 @@ function TopBar(): React.JSX.Element {
 
   return (
     <Box sx={{ display: "flex" }}>
+      <TodoDialog
+        isOpen={dialogHandlerState.isOpen}
+        action={<Button onClick={store}>Create</Button>}
+        handleCancel={dialogHandlerState.closeDialog}
+        handleTask={handleForm}
+      />
       <AppBar component={"nav"} sx={{ backgroundColor: "black" }}>
-        <Toolbar>
+        <Toolbar sx={{ minHeight: 60 }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -69,14 +117,17 @@ function TopBar(): React.JSX.Element {
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
               <Button
-                key={item}
+                key={item.label}
                 sx={{
                   color: "#fff",
                   border: "1px solid white",
                   borderRadius: "20px",
                 }}
+                onClick={(): void => {
+                  item.whatToDo(dialogHandlerState.openDialog);
+                }}
               >
-                {item}
+                {item.label}
               </Button>
             ))}
           </Box>
