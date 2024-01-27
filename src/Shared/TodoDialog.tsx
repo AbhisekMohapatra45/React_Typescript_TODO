@@ -41,7 +41,9 @@ function TodoDialog({
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCancel}>Cancel</Button>
+        <Button onClick={handleCancel} color="error">
+          Cancel
+        </Button>
         {action}
       </DialogActions>
     </Dialog>
