@@ -23,6 +23,7 @@ export default function TaskCard({
         border: "1px solid black",
         borderStyle: "groove",
         borderRadius: "15px",
+        boxShadow: "none",
       }}
     >
       <CardContent sx={{ flex: "1 0 auto" }}>

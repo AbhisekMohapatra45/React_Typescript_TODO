@@ -1,7 +1,8 @@
-import { Container, styled } from "@mui/material";
+import { Box, Container, styled } from "@mui/material";
 import React, { useContext } from "react";
 import TaskCard from "../Components/TaskView/TaskCard";
 import { TodoListContext } from "../context/TodoListContext";
+import { TodoTaskCreate } from "../utils/interfaces";
 
 const TodoListBackGround = styled("div")(({ theme }) => ({
   display: "flex",
@@ -23,7 +24,11 @@ function TodoList(): React.JSX.Element {
   return (
     <TodoListBackGround>
       <Container maxWidth="md">
-        <TaskCard taskName="Hello Abhisek DO This By EOD" />
+        <Box sx={{ display: "flex", flexDirection: "column", rowGap: 2 }}>
+          {data?.map(({ id, taskName }: TodoTaskCreate) => (
+            <TaskCard key={id} taskName={taskName} />
+          ))}
+        </Box>
       </Container>
     </TodoListBackGround>
   );

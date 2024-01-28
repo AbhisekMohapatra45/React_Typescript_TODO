@@ -15,6 +15,8 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import TodoDialog from "../Shared/TodoDialog";
+import { createTask } from "../Shared/STORAGE/manage";
+import { useNavigate } from "react-router-dom";
 
 const navItems = [
   {
@@ -26,6 +28,7 @@ const navItems = [
 ];
 
 function TopBar(): React.JSX.Element {
+  const navigate = useNavigate();
   interface DialogHandlerState {
     isOpen: boolean;
     openDialog: () => void;
@@ -55,7 +58,17 @@ function TopBar(): React.JSX.Element {
     setDialogHandleState((prev) => ({ ...prev, taskName: value }));
   };
 
-  const store = (): void => {};
+  const store = (): void => {
+    const uuid: number = Date.now();
+    const isStored = createTask({
+      id: uuid,
+      taskName: dialogHandlerState.taskName,
+    });
+    if (isStored) {
+      dialogHandlerState.closeDialog();
+      navigate(`/todo-list`);
+    }
+  };
 
   const handleDrawerToggle = (): void => {
     setMobileOpen(!mobileOpen);

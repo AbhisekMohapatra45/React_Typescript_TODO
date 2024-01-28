@@ -1,15 +1,12 @@
 import { createContext } from "react";
 import { useQuery } from "react-query";
-interface TodoList {
-  id: string;
-  taskName: string;
-}
+import { TodoTaskCreate } from "../utils/interfaces";
 
 interface TodoContextInterf {
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
-  data: TodoList[] | any;
+  data: TodoTaskCreate[] | any;
 }
 
 export const TodoListContext = createContext<TodoContextInterf>({
@@ -23,9 +20,8 @@ const TodoListProvider = ({ children }: any) => {
   const { isLoading, isError, isSuccess, data } = useQuery({
     queryKey: "todos",
     queryFn: () => {
-      setTimeout(() => {
-        return localStorage.getItem("todoList");
-      }, 3000);
+      const todoList: string | any = localStorage.getItem("todos");
+      return JSON.parse(todoList);
     },
   });
   return (
